@@ -4,3 +4,11 @@ uploads/*
 !uploads/.gitkeep
 .env
 *.log
+
+
+# Cookie files from curl tests
+*.txt
+
+# Frontend
+client/node_modules/
+client/dist/

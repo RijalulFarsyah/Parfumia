@@ -54,6 +54,7 @@ import { createWithdrawal, getWithdrawalsBySeller, getBalance } from '../models/
 import { db } from '../models/database.js';
 import { findUserByUsername } from '../models/users.js';
 import { listAddresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } from '../models/addresses.js';
+import { listActiveBanners } from '../models/banners.js';
 
 export function listProductsController(req, res) {
   const { brand, gender, concentration, maxPrice, keyword, page = 1, limit = 20 } = req.query;
@@ -148,6 +149,19 @@ export function removeFromCartController(req, res) {
   const userId = req.session.userId;
   if (!userId) return res.status(401).json({ error: 'Authentication required' });
   removeFromCart(userId, parseInt(productId, 10));
+  res.json({ ok: true });
+}
+
+export function updateCartQtyController(req, res) {
+  const userId = req.session.userId;
+  const { productId, qty } = req.body ?? {};
+  if (!productId || !Number.isInteger(Number(productId)) || Number(productId) < 1) {
+    return res.status(400).json({ error: 'productId is required' });
+  }
+  if (!Number.isInteger(Number(qty)) || Number(qty) < 1) {
+    return res.status(400).json({ error: 'qty must be a positive integer' });
+  }
+  updateCartQty(userId, Number(productId), Number(qty));
   res.json({ ok: true });
 }
 
@@ -365,4 +379,8 @@ export function getPaymentStatusController(req, res) {
   const payment = getPaymentByOrder(parseInt(req.params.orderId, 10));
   if (!payment) return res.status(404).json({ error: 'Payment not found' });
   res.json({ payment });
+}
+
+export function listActiveBannersController(req, res) {
+  res.json({ banners: listActiveBanners() });
 }

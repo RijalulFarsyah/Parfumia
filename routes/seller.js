@@ -16,6 +16,8 @@ import {
   reportsController,
   balanceController,
   withdrawController,
+  getStoreProfileController,
+  updateStoreProfileController,
 } from '../controllers/sellerController.js';
 
 const router = Router();
@@ -39,5 +41,7 @@ router.get('/reviews', listReviewsController);
 router.get('/reports', reportsController);
 router.get('/balance', balanceController);
 router.post('/withdrawals', withdrawController);
+router.get('/store', getStoreProfileController);
+router.put('/store', updateStoreProfileController);
 
 export default router;

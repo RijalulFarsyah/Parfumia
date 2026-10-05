@@ -20,6 +20,7 @@ import {
 } from '../models/orders.js';
 import { getReviewsForStore, addReview } from '../models/reviews.js';
 import { getWithdrawalsBySeller, getBalance, createWithdrawal } from '../models/withdrawals.js';
+import { getStoreByUserId, updateStore } from '../models/stores.js';
 import { findUserByUsername } from '../models/users.js';
 import { db } from '../models/database.js';
 
@@ -82,7 +83,7 @@ export function getMyProductController(req, res) {
   const store = db.prepare('SELECT id FROM stores WHERE user_id = ?').get(userId);
   if (!store) return res.status(400).json({ error: 'Store not found' });
 
-  const product = getProductById(parseInt(req.params.id, 10), userId);
+  const product = getProductById(parseInt(req.params.id, 10));
   if (!product) return res.status(404).json({ error: 'Product not found' });
   res.json({ product });
 }
@@ -94,7 +95,7 @@ export function updateProductController(req, res) {
   const store = db.prepare('SELECT id FROM stores WHERE user_id = ?').get(userId);
   if (!store) return res.status(400).json({ error: 'Store not found' });
 
-  const product = getProductById(parseInt(req.params.id, 10), userId);
+  const product = getProductById(parseInt(req.params.id, 10));
   if (!product) return res.status(404).json({ error: 'Product not found' });
   if (product.store_id !== store.id) return res.status(403).json({ error: 'Forbidden' });
 
@@ -110,7 +111,7 @@ export function deleteProductController(req, res) {
   const store = db.prepare('SELECT id FROM stores WHERE user_id = ?').get(userId);
   if (!store) return res.status(400).json({ error: 'Store not found' });
 
-  const product = getProductById(parseInt(req.params.id, 10), userId);
+  const product = getProductById(parseInt(req.params.id, 10));
   if (!product) return res.status(404).json({ error: 'Product not found' });
   if (product.store_id !== store.id) return res.status(403).json({ error: 'Forbidden' });
 
@@ -125,7 +126,7 @@ export function updateStockController(req, res) {
   const store = db.prepare('SELECT id FROM stores WHERE user_id = ?').get(userId);
   if (!store) return res.status(400).json({ error: 'Store not found' });
 
-  const product = getProductById(parseInt(req.params.id, 10), userId);
+  const product = getProductById(parseInt(req.params.id, 10));
   if (!product) return res.status(404).json({ error: 'Product not found' });
   if (product.store_id !== store.id) return res.status(403).json({ error: 'Forbidden' });
 
@@ -249,4 +250,22 @@ export function withdrawController(req, res) {
 
   const withdrawal = createWithdrawal(userId, amount);
   res.status(201).json({ withdrawal });
+}
+
+export function getStoreProfileController(req, res) {
+  const userId = req.session.userId;
+  if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
+  const store = getStoreByUserId(userId);
+  if (!store) return res.status(404).json({ error: 'Store not found' });
+  res.json({ store });
+}
+
+export function updateStoreProfileController(req, res) {
+  const userId = req.session.userId;
+  if (!userId) return res.status(401).json({ error: 'Authentication required' });
+
+  const { name, logo, description, address } = req.body ?? {};
+  const store = updateStore(userId, { name, logo, description, address });
+  res.json({ store });
 }

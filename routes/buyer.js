@@ -8,6 +8,7 @@ import {
   getWishlistController,
   clearWishlistController,
   addToCartController,
+  updateCartQtyController,
   removeFromCartController,
   getCartController,
   clearCartController,
@@ -27,6 +28,7 @@ import {
   updateProfileController,
   uploadPaymentController,
   getPaymentStatusController,
+  listActiveBannersController,
 } from '../controllers/buyerController.js';
 import { upload } from '../middlewares/upload.js';
 
@@ -42,11 +44,12 @@ router.get('/wishlist', getWishlistController);
 router.delete('/wishlist', clearWishlistController);
 
 router.post('/cart', addToCartController);
+router.put('/cart', updateCartQtyController);
 router.put('/cart/:productId', removeFromCartController);
 router.put('/cart/qty/:productId', addToCartController);
 router.get('/cart', getCartController);
 router.delete('/cart/clear', clearCartController);
-router.delete('/cart', clearCartController);
+router.delete('/cart/:productId', removeFromCartController);
 
 router.post('/orders', placeOrderController);
 router.get('/orders', getOrdersController);
@@ -55,6 +58,7 @@ router.put('/orders/:id/confirm-received', confirmReceivedController);
 router.post('/reviews', addReviewController);
 router.post('/complaints', addComplaintController);
 router.get('/vouchers', getVouchersController);
+router.get('/banners', listActiveBannersController);
 
 router.get('/addresses', listAddressesController);
 router.post('/addresses', addAddressController);

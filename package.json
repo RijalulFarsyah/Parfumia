@@ -5,15 +5,17 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "seed": "node scripts/seed.js"
+    "seed": "node scripts/seed.js",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.3.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "better-sqlite3": "^11.3.0",
     "multer": "^1.4.5-lts.1"
   },
   "allowScripts": {
